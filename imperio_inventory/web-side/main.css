@@ -1,0 +1,487 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+}
+
+img {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
+}
+
+#inventory {
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(12, 12, 12, 0.96) 0%, rgba(19, 19, 19, 0.99) 100%);
+    background-size: 100% 100%;
+    background-position: center;
+    font-family: 'Roboto Condensed', sans-serif;
+    cursor: grab;
+}
+
+.container {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header img {
+    height: 6vw;
+}
+
+.left-header {
+    display: flex;
+    align-items: center;
+    color: #FFF;
+    gap: 0.5729166666666667vw;
+}
+
+.left-header p {
+    font-weight: 500;
+    font-size: 0.8333333333333334vw;
+}
+
+.left-header h3 {
+    font-weight: 700;
+    font-size: 2.5vw;
+}
+
+.right-header {
+    display: flex;
+    gap: 0.7291666666666667vw;
+    align-items: center;
+    cursor: pointer;
+    
+}
+
+.right-header:hover {
+    opacity: .7;
+}
+
+.title-close {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 0.7291666666666667vw;
+    color: #FFF;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.close-button {
+    width: 1.875vw;
+    height: 1.875vw;
+    background: linear-gradient(180deg, rgb(32, 32, 32) 0%, #b30c00 100%);
+    border-radius: 0.78125vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-button img {
+    width: 1.0416666666666667vw;
+}
+
+main {
+    width: 100%;
+    height: 43.489583333333336vw;
+    margin-top: 1.875vw;
+    color: #FFF;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 0.8333333333333334vw;
+    margin-right: 4.322916666666667vw;
+}
+
+.title-left p {
+    font-weight: 500;
+    font-size: 0.7291666666666667vw;
+}
+
+.title-left h3 {
+    font-weight: 700;
+    font-size: 1.0416666666666667vw;
+}
+
+.left-content {
+    width: 15.5vw;
+    max-height: 33.75vw;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow: auto;
+    gap: 0.625vw;
+}
+
+::-webkit-scrollbar {
+    width: 0.10416666666666667vw;
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.397) 0%, rgba(0, 0, 0, 0.473) 100%);
+}
+  
+::-webkit-scrollbar-thumb {
+    background: rgb(255, 217, 0);
+}
+
+.slot-content {
+    width: 14.635416666666668vw;
+    height: 6.25vw;
+    background-image: url('./assets/images/weapon-slot.png');
+    border-radius: 1.1458333333333335vw;
+    background-size: 100% 100%;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+    padding: 0.9375vw 0;
+    cursor: pointer;
+    
+}
+
+.slot-content img {
+    height: 3.229166666666667vw;
+}
+
+.slot-content:hover {
+    background-color: url('./assets/images/weapon-slot-active.png');
+}
+.selected-weapon {
+    background-image: url('./assets/images/weapon-slot-active.png');
+}
+
+.weapon-name {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0.46875vw 1.1979166666666667vw;
+    font-size: 0.8333333333333334vw;
+    font-weight: 500;
+}
+
+.ammo-quantity {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0.46875vw 1.875vw;
+    font-size: 0.8333333333333334vw;
+    font-weight: 500;
+}
+
+.left-buttons {     
+    width: 14.635416666666668vw;
+    height: 1.9791666666666667vw;
+    display: flex;
+    font-weight: 500;
+    font-size: 0.8333333333333334vw;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.button-left-red {
+    width: 9.375vw;
+    height: 100%;
+    background-image: url('./assets/images/button-left-red.png');
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.button-left-red:hover {
+    opacity: .7;
+}
+
+.button-left-black {
+    width: 5.520833333333334vw;
+    height: 100%;
+    background-image: url('./assets/images/button-left-black.png');
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.button-left-black:hover {
+    opacity: .7;
+}
+
+.center-main {
+    width: 34.62291666666667vw;
+}
+
+.add-main {
+    width: 34.62291666666667vw;
+    margin-left: 1.71875vw;;
+}
+
+.header-center {
+    width: 100%;
+    height: 2vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-header-center p {
+    font-weight: 500;
+    font-size: 0.7291666666666667vw;
+    color: #FFF;
+}
+
+.left-header-center h3 {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.0416666666666667vw;
+    color: #FFF;
+}
+
+.container-slots {
+    width: 100%;
+    height: 40.625vw;
+    margin-top: 0.8333333333333334vw;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625vw;
+    overflow: auto;
+}
+
+#context-menu {
+   background-color: #282828;
+   border: 1px solid #555;
+   border-radius: 5px;
+   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+   overflow: hidden; /* Garante que o border-radius funcione corretamente */
+}
+
+.context-menu-option {
+   color: #eee;
+   padding: 10px 15px;
+   cursor: pointer;
+   border-bottom: 1px solid #444;
+   white-space: nowrap; /* Evita que o texto quebre */
+}
+
+.context-menu-option:last-child {
+   border-bottom: none; /* Remove a borda inferior do último item */
+}
+
+.context-menu-option:hover {
+   background-color: #444;
+}
+
+.slot {
+    width: 6.25vw;
+    height: 6.25vw;
+    background-image: url('./assets/images/slot-empty.png');
+    background-size: 100% 100%;
+    border-radius: 1.1458333333333335vw;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: .5vw;
+    padding: 0.7291666666666667vw 0;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.8333333333333334vw;
+}
+
+.slot:hover {
+    background-image: url('./assets/images/slot-active.png');
+    background-size: 100% 100%;
+}
+
+.slot-active {
+    background-image: url('./assets/images/slot-active.png') !important;
+    background-size: 100% 100%;
+}
+
+.slot-item {
+    background-image: url('./assets/images/slot-item.png');
+    background-size: 100% 100%;
+}
+
+.slot img {
+    height: 2.3958333333333335vw;
+}
+
+.amount-circle {
+    padding: 0.2604166666666667vw;
+    background: linear-gradient(180deg, rgb(46, 46, 45) 0%, rgb(243, 243, 128) 100%);
+    border-radius: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0.625vw;
+    font-size: 0.625vw;
+    font-weight: 500;
+    z-index: 2;
+}
+
+.right-main {
+    margin-top: 2.8645833333333335vw;
+    margin-left: 1.71875vw;
+}
+
+.photo-frame {
+    width: 11.822916666666668vw;
+    height: 7.552083333333334vw;
+    background-image: url('./assets/images/photo-frame.png');
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.photo-frame img {
+    height: 3.4375vw;
+}
+
+.buttons-frame {
+    width: 100%;
+    margin-top: 0.5729166666666667vw;
+    display: flex;
+    flex-direction: column; 
+    gap: 0.4166666666666667vw;
+}
+
+.buttons-frame button {
+    width: 100%;
+    height: 1.9270833333333335vw;
+    border-radius: 1.25vw;
+    font-weight: 500;
+    font-size: 0.7291666666666667vw;
+    background: linear-gradient(102.47deg, #FFFFFF 0%, #CBCBCB 100%);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    
+}
+
+.buttons-frame button:hover {
+    opacity: .7;
+}
+
+.button-send {
+    background: linear-gradient(180deg, rgba(255, 230, 0, 0.78) 0%, rgba(255, 251, 0, 0.78) 100%) !important;
+    color: #FFF;
+}
+
+.name-frame {
+    position: absolute;
+    margin: auto;
+    top: 0.4166666666666667vw;
+    font-weight: 500;
+    font-size: 0.8333333333333334vw;
+    text-transform: uppercase;
+}
+
+.weight-frame {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 1.0416666666666667vw;
+    font-weight: 400;
+    font-size: 0.7291666666666667vw;
+}
+
+.circle-quantity {
+    padding: 0.2604166666666667vw;
+    border-radius: 100%;
+    background: linear-gradient(180deg, rgba(255, 230, 0, 0.78) 0%, rgba(238, 255, 0, 0.78) 100%);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 1.0416666666666667vw;
+    font-weight: 400;
+    font-size: 0.625vw;
+}
+
+.input-amount {
+    width: 100%;
+    height: 1.9270833333333335vw;
+    border-radius: 1.25vw;
+    font-weight: 500;
+    font-size: 0.7291666666666667vw;
+    background: linear-gradient(102.47deg, #FFFFFF 0%, #CBCBCB 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1vw;
+}
+
+.input-amount input {
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: center;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.right-header-center {
+    margin-right: 1vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.balls-frame {
+    width: 3.75vw;
+    height: 0.625vw;
+    background: rgba(255, 255, 255, 0.25);
+    clip-path: path('M59.676 6.162a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM44.757 6.162a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM29.838 6.162a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM14.919 6.162a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM0 6.162a6.162 6.162 0 1 1 12.324 0A6.162 6.162 0 0 1 0 6.162z');
+    position: relative;
+}
+
+.inside-ball {
+    position: absolute;
+    left: 0;
+    width: 32%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 238, 0, 0.78) 0%, rgba(255, 251, 0, 0.78) 100%);
+}

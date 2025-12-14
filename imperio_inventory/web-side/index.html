@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>control_inventory</title>
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div style="display: none;" id="inventory">
+        <div class="container">
+            <header>
+                <div class="left-header">
+                    <img src="assets/images/logo.png" />
+                    <div class="title-header">
+                        <p>BEM-VINDO AO</p>
+                        <h3>INVENTÁRIO</h3>
+                    </div>
+                </div>
+                <div class="right-header">
+                    <div class="title-close">
+                        <p>Sair do</p>
+                        <p>inventário</p>
+                    </div>
+                    <div class="close-button" onclick="Close()">
+                        <img src="assets/images/close.svg" />
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="left-main">
+                    <div class="title-left">
+                        <p>Equipamentos</p>
+                        <h3>ARMAS</h3>
+                    </div>
+                    <div class="left-content">
+                    </div>
+                    <div class="left-buttons">
+                        <div class="button-left-red">DESEQUIPAR</div>
+                        <div class="button-left-black">TODAS</div>
+                    </div>
+                </div>
+
+
+                <div class="center-main">
+                    <div class="header-center">
+                        <div class="left-header-center">
+                            <p>Atual</p>
+                            <h3>inventário</h3>
+                        </div>
+                        <div class="right-header-center">
+                            <p class="weightValue weight-left"></p>
+                            <div class="balls-frame">
+                                <div class="inside-ball inside-left"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-slots slots-left"></div>
+                </div>
+                <div class="right-main">
+                    <div class="photo-frame">
+                        <p class="name-frame">NENHUM</p>
+                        <img class="image-grame" src="./assets/images/no_image.png" />
+                        <p class="weight-frame">0kg</p>
+                        <div class="circle-quantity">0</div>
+                    </div>
+                    <div class="buttons-frame">
+                        <div class="input-amount">
+                            <input type="number" class="input-frame" placeholder="Quantidade" />
+                        </div>
+                        <button class="action-button button-send" data-route="USE_ITEM">Usar</button>
+                        <button class="action-button" data-route="SEND_ITEM">Enviar</button>
+                        <button class="action-button" data-route="DROP_ITEM">Dropar</button>
+                    </div>
+                </div>
+                            <div id="context-menu" style="display: none; position: absolute; z-index: 1000;">
+                <div class="context-menu-option" data-action="USE_ITEM">Usar</div>
+                <div class="context-menu-option" data-action="SEND_ITEM">Enviar</div>
+                <div class="context-menu-option" data-action="DROP_ITEM">Dropar</div>
+            </div>
+                <div style="display: none;" class="add-main right">
+                    <div class="header-center">
+                        <div class="left-header-center">
+                            <p>Atual</p>
+                            <h3 class="inventory-right-type"></h3>
+                        </div>
+                        <div class="right-header-center">
+                            <p class="weightValue weight-right"></p>
+                            <div class="balls-frame">
+                                <div class="inside-ball inside-right'"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-slots slots-right">
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
+    <script src="utils/App.js"></script>
+    <script src="main.js"></script>
+    <script src="modules/Weapons.js"></script>
+    <script src="modules/Inventory.js"></script>
+    <script src="modules/Inspect.js"></script>
+    <script src="modules/Chest.js"></script>
+    <script src="modules/Shop.js"></script>
+</body>
+</html>
