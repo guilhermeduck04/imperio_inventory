@@ -1,6 +1,7 @@
 local Tunnel <const>        = module("vrp","lib/Tunnel")
 local RESOURCE_NAME <const> = GetCurrentResourceName()
 local Proxy <const>         = module("vrp","lib/Proxy")
+local currentMugshot = nil
 
 ---@alias vector3 table
 
@@ -69,7 +70,16 @@ RegisterCommand("abrirmochilanikito",function()
     return
     end
     
-    SendNUIMessage({ route = "OPEN_INVENTORY" })
+    -- Gera a foto antes de abrir
+    local mugshotTxd = API.CreatePedMugshot()
+    
+    -- Envia a NUI com a foto
+    SendNUIMessage({ 
+        route = "OPEN_INVENTORY",
+        payload = {
+            mugshot = mugshotTxd -- Envia a textura da foto
+        }
+    })
     SetNuiFocus(true,true)
 end)
 
@@ -93,6 +103,34 @@ AddEventHandler("inventory:update", function()
     end
 end)
 
+-- Função para registrar o Headshot
+function API.CreatePedMugshot()
+    local ped = PlayerPedId()
+    local handle = RegisterPedheadshot(ped)
+    
+    local timeout = 2000
+    while not IsPedheadshotReady(handle) and timeout > 0 do
+        Wait(10)
+        timeout = timeout - 10
+    end
+
+    if IsPedheadshotReady(handle) then
+        local txd = GetPedheadshotTxdString(handle)
+        currentMugshot = handle
+        return txd
+    end
+    
+    return nil
+end
+
+-- Função para limpar o Headshot (Chamar ao fechar inventário)
+function API.ReleasePedMugshot()
+    if currentMugshot then
+        UnregisterPedheadshot(currentMugshot)
+        currentMugshot = nil
+    end
+end
+
 function API.getActivePlayers()
     local response = {}
     local players = GetActivePlayers()
@@ -114,6 +152,7 @@ end)
 
 RegisterNetEvent('closeInventory')
 AddEventHandler('closeInventory',function()
+    API.ReleasePedMugshot() -- Limpa a foto da memória
     SendNUIMessage({ route = "CLOSE_INVENTORY" })
 end)
 

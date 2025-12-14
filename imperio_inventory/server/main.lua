@@ -54,36 +54,43 @@ local classWeapons = {
     ["WEAPON_FNFAL"] = "RIFLE",
 }
 
+-- Procure por: RegisterTunnel.getInventory = function()
+-- Substitua a função inteira por esta:
+
 RegisterTunnel.getInventory = function()
     local source = source
-	local user_id = vRP.getUserId(source)
-	local identity = vRP.getUserIdentity(user_id)
+    local user_id = vRP.getUserId(source)
+    if user_id then
+        local identity = vRP.getUserIdentity(user_id) -- Pega a identidade
+        local inv = vRP.getInventory(user_id)
+        if inv then
+            local inventory = {}
 
-	if user_id then
-		local inv = vRP.getInventory(user_id)
-		local amountMoc = vRP.getMochilaAmount(user_id)
-		if inv then
-			local inventory = {}
+            for k, v in pairs(inv) do
+                if Items[v.item] then
+                    if (parseInt(v["amount"]) <= 0 or Items[v.item] == nil) then
+                        vRP.removeInventoryItem(user_id, v.item, parseInt(v["amount"]))
+                    else
+                        v["amount"] = parseInt(v["amount"])
+                        v["name"] = Items[v["item"]].name
+                        v["peso"] = Items[v["item"]].weight
+                        v["index"] = v["item"]
+                        v["key"] = v["item"]
+                        v["slot"] = k
+                        inventory[k] = v
+                    end
+                end
+            end
 
-			for k, v in pairs(inv) do
-				if Items[v.item] then
-					if (parseInt(v["amount"]) <= 0 or Items[v.item] == nil) then
-						vRP.removeInventoryItem(user_id, v.item, parseInt(v["amount"]))
-					else
-						v["amount"] = parseInt(v["amount"])
-						v["name"] = Items[v["item"]].name
-						v["peso"] = Items[v["item"]].weight
-						v["index"] = v["item"]
-						v["key"] = v["item"]
-						v["slot"] = k
-						inventory[k] = v
-					end
-				end
-			end
-
-			return {inventory = inventory, weight = vRP.computeInvWeight(user_id), max_weight = vRP.getInventoryMaxWeight(user_id)}
-		end
-	end
+            return { 
+                inventory = inventory, 
+                weight = vRP.computeInvWeight(user_id), 
+                max_weight = vRP.getInventoryMaxWeight(user_id),
+                user_name = identity.nome.." "..identity.sobrenome,
+                user_id = user_id
+            }
+        end
+    end
 end
 
 ConfigServer = {

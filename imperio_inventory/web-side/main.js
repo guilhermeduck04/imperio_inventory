@@ -2,20 +2,35 @@ window.classInstances = {};
 globalThis.SelectedItem = {}
 
 const Routes = {
-    "OPEN_INVENTORY": async function(payload){
-        const userInventory = await Client("GET_INVENTORY")
-        $(".left-main").css("display", "flex");
-        
-        // Reseta visuais
-        $(".inventory-right-type").html("ARREDORES");
-        $(".right-weight-container").hide();
-        $(".add-main.right").hide(); 
+"OPEN_INVENTORY": async function(payload){
+    const userInventory = await Client("GET_INVENTORY")
+    $(".left-main").css("display", "flex");
+    
+    // Configura a Identidade Visual
+    if(userInventory.user_name && userInventory.user_id){
+        $("#player-identity-card").fadeIn();
+        $("#id-card-name").text(userInventory.user_name);
+        $("#id-card-number").text(`PASSAPORTE: ${userInventory.user_id}`);
+    }
 
-        window.classInstances["weapons"] = new Weapons(await Client("GET_WEAPONS"))
-        window.classInstances["left"] = new Inventory(userInventory)
-        
-        $("#inventory").fadeIn(150); // Fade mais rápido para performance
-    },
+    // Configura a Foto (Mugshot)
+    if(payload && payload.mugshot){
+        // A URL da textura do Headshot é: https://nui-img/TXD_STRING/TXD_STRING
+        $("#id-card-mugshot").attr("src", `https://nui-img/${payload.mugshot}/${payload.mugshot}`);
+    } else {
+        $("#id-card-mugshot").attr("src", "assets/images/no_image.png");
+    }
+    
+    // Reseta visuais
+    $(".inventory-right-type").html("ARREDORES");
+    $(".right-weight-container").hide();
+    $(".add-main.right").hide(); 
+
+    window.classInstances["weapons"] = new Weapons(await Client("GET_WEAPONS"))
+    window.classInstances["left"] = new Inventory(userInventory)
+    
+    $("#inventory").fadeIn(150);
+},
     "OPEN_CHEST": async function(payload){
         $(".left-main").css("display", "none");
         $(".add-main.right").show();
@@ -38,15 +53,16 @@ const Routes = {
         window.classInstances["right"] = new Shop(payload)
         $("#inventory").fadeIn(150);
     },   
-    "CLOSE_INVENTORY": async function(payload){
-        $('#context-menu').hide();
-        const ignoreRight = payload.ignoreRight || false
-        Client("CLOSE_INVENTORY",{
-            right: ignoreRight || window.classInstances.hasOwnProperty("right")
-        })
-        window.classInstances = {}
-        $("#inventory").fadeOut(150);
-    },
+"CLOSE_INVENTORY": async function(payload){
+    $('#context-menu').hide();
+    $("#player-identity-card").hide();
+    const ignoreRight = payload.ignoreRight || false
+    Client("CLOSE_INVENTORY",{
+        right: ignoreRight || window.classInstances.hasOwnProperty("right")
+    })
+    window.classInstances = {}
+    $("#inventory").fadeOut(150);
+},
     "OPEN_INSPECT": async function(payload){
         window.classInstances["left"] = new Inventory(payload.source)
         window.classInstances["right"] = new Inspect(payload.target)
