@@ -25,13 +25,21 @@ RegisterNetEvent("imperio_survival:updateArena", function(boolean)
     in_arena = boolean
 end)
 
--- NOVO: Thread para cancelar ação com X (Tecla 73)
+-- BLOQUEIO DE TECLAS NUMÉRICAS (1-5) PARA ARMAS
 CreateThread(function()
     while true do
         local time = 100
+        -- Bloqueia troca de arma nativa (1, 2, 3, 4, 5)
+        DisableControlAction(0, 157, true) 
+        DisableControlAction(0, 158, true) 
+        DisableControlAction(0, 160, true) 
+        DisableControlAction(0, 164, true) 
+        DisableControlAction(0, 165, true) 
+        
+        -- Verifica se deve cancelar ação com X (Tecla 73)
         if API.isUsingItem and API.isUsingItem() then
             time = 5
-            if IsControlJustPressed(0, 73) then -- Tecla X
+            if IsControlJustPressed(0, 73) then 
                 API.cancelItem()
             end
         end
@@ -61,13 +69,7 @@ RegisterCommand("abrirmochilanikito",function()
     return
     end
     
-    -- Busca itens num raio de 3 metros
-    local drops = API.getNearbyDrops(3.0)
-
-    SendNUIMessage({
-        route = "OPEN_INVENTORY",
-        drops = drops -- Envia a lista para o HTML
-    })
+    SendNUIMessage({ route = "OPEN_INVENTORY" })
     SetNuiFocus(true,true)
 end)
 

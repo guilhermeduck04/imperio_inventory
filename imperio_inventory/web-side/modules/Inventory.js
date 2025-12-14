@@ -24,10 +24,10 @@ class Inventory {
         return _slot
     }
 
-    refreshWeight(){
+refreshWeight(){
         if(this.side == "right" && window.classInstances[this.side]?.mode){
             $(".weight-right").html(`-`);
-            $(`.inside-${this.side}`).css("width", `${(0 * 100) / 100}%`);
+            $(`.inside-${this.side}`).css("width", `0%`);
             return
         }
         
@@ -39,10 +39,23 @@ class Inventory {
             }
         }, 0); 
 
-        $(`.weight-${this.side}`).html(`${(this.currentWeight).toFixed(2)} / ${this.maxWeight} KG`);
-        $(`.inside-${this.side}`).css("width", `${(this.currentWeight * 100) / this.maxWeight}%`);
+        // Atualiza o texto visualmente
+        $(`.weight-${this.side}`).html(`${(this.currentWeight).toFixed(2)} / ${this.maxWeight.toFixed(2)} KG`);
+        
+        // Atualiza a barra
+        let percentage = (this.currentWeight * 100) / this.maxWeight;
+        if(percentage > 100) percentage = 100;
+        $(`.inside-${this.side}`).css("width", `${percentage}%`);
+        
+        // Muda a cor se estiver cheio
+        if(percentage >= 90) {
+            $(`.inside-${this.side}`).css("background", "linear-gradient(90deg, #ff4444, #ff0000)");
+        } else {
+            $(`.inside-${this.side}`).css("background", "linear-gradient(90deg, #ff8c00, #ffa500)");
+        }
     }
 
+    
     parseItems(items){
         Object.keys(items).forEach(slot => {
             let itemName        = items[slot].item
