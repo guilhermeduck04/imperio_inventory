@@ -1,108 +1,105 @@
 <!DOCTYPE html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>control_inventory</title>
+    <title>HORIZON INVENTORY</title>
     <link rel="stylesheet" href="main.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div style="display: none;" id="inventory">
+        <div class="overlay-bg"></div>
+
         <div class="container">
             <header>
-                <div class="left-header">
-                    <img src="assets/images/logo.png" />
-                    <div class="title-header">
-                        <p>BEM-VINDO AO</p>
-                        <h3>INVENTÁRIO</h3>
+                <div class="header-section">
+                    <h1>INVENTÁRIO</h1>
+                    <div class="weight-bar-container">
+                        <div class="weight-text weight-left">0 / 0 KG</div>
+                        <div class="weight-progress-bar">
+                            <div class="weight-fill inside-left"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="right-header">
-                    <div class="title-close">
-                        <p>Sair do</p>
-                        <p>inventário</p>
-                    </div>
-                    <div class="close-button" onclick="Close()">
-                        <img src="assets/images/close.svg" />
+
+                <div class="header-section right-header-info">
+                    <h1 class="inventory-right-type">HORIZON</h1>
+                    <div class="weight-bar-container right-weight-container" style="display:none;">
+                        <div class="weight-text weight-right"></div>
+                        <div class="weight-progress-bar">
+                            <div class="weight-fill inside-right"></div>
+                        </div>
                     </div>
                 </div>
             </header>
+
             <main>
-                <div class="left-main">
-                    <div class="title-left">
-                        <p>Equipamentos</p>
-                        <h3>ARMAS</h3>
-                    </div>
-                    <div class="left-content">
-                    </div>
-                    <div class="left-buttons">
-                        <div class="button-left-red">DESEQUIPAR</div>
-                        <div class="button-left-black">TODAS</div>
+                <div class="column left-col">
+                    <div class="column-header">EQUIPAMENTOS</div>
+                    <div class="left-content"></div>
+                    <div class="action-buttons-grid">
+                        <button class="pubg-btn button-left-red">DESEQUIPAR</button>
+                        <button class="pubg-btn button-left-black">TODAS</button>
                     </div>
                 </div>
 
+                <div class="column center-col">
+                    <div class="hotbar-container">
+                        <div class="hotbar-header">SLOTS RÁPIDOS (1-5)</div>
+                        <div class="hotbar-slots">
+                            </div>
+                    </div>
 
-                <div class="center-main">
-                    <div class="header-center">
-                        <div class="left-header-center">
-                            <p>Atual</p>
-                            <h3>inventário</h3>
+                    <div class="column-header">MOCHILA</div>
+                    <div class="container-slots slots-left">
                         </div>
-                        <div class="right-header-center">
-                            <p class="weightValue weight-left"></p>
-                            <div class="balls-frame">
-                                <div class="inside-ball inside-left"></div>
+                </div>
+
+                <div class="column right-col">
+                    <div class="item-inspector">
+                        <div class="inspector-header name-frame">NENHUM</div>
+                        <div class="inspector-image">
+                            <img class="image-grame" src="./assets/images/no_image.png" />
+                        </div>
+                        <div class="inspector-stats">
+                            <span class="weight-frame">0.0kg</span>
+                            <span class="circle-quantity">x0</span>
+                        </div>
+                        <div class="inspector-actions">
+                            <input type="number" class="pubg-input input-frame" placeholder="QTD" />
+                            <div class="btn-group">
+                                <button class="pubg-btn action-button" data-route="USE_ITEM">USAR</button>
+                                <button class="pubg-btn action-button" data-route="SEND_ITEM">ENVIAR</button>
+                                <button class="pubg-btn action-button" data-route="DROP_ITEM">DROPAR</button>
                             </div>
                         </div>
                     </div>
-                    <div class="container-slots slots-left"></div>
-                </div>
-                <div class="right-main">
-                    <div class="photo-frame">
-                        <p class="name-frame">NENHUM</p>
-                        <img class="image-grame" src="./assets/images/no_image.png" />
-                        <p class="weight-frame">0kg</p>
-                        <div class="circle-quantity">0</div>
+
+                    <div style="display: none;" class="add-main right">
+                        <div class="container-slots slots-right"></div>
                     </div>
-                    <div class="buttons-frame">
-                        <div class="input-amount">
-                            <input type="number" class="input-frame" placeholder="Quantidade" />
-                        </div>
-                        <button class="action-button button-send" data-route="USE_ITEM">Usar</button>
-                        <button class="action-button" data-route="SEND_ITEM">Enviar</button>
-                        <button class="action-button" data-route="DROP_ITEM">Dropar</button>
-                    </div>
-                </div>
-                            <div id="context-menu" style="display: none; position: absolute; z-index: 1000;">
-                <div class="context-menu-option" data-action="USE_ITEM">Usar</div>
-                <div class="context-menu-option" data-action="SEND_ITEM">Enviar</div>
-                <div class="context-menu-option" data-action="DROP_ITEM">Dropar</div>
-            </div>
-                <div style="display: none;" class="add-main right">
-                    <div class="header-center">
-                        <div class="left-header-center">
-                            <p>Atual</p>
-                            <h3 class="inventory-right-type"></h3>
-                        </div>
-                        <div class="right-header-center">
-                            <p class="weightValue weight-right"></p>
-                            <div class="balls-frame">
-                                <div class="inside-ball inside-right'"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-slots slots-right">
+                    
+                    <div class="close-btn-container">
+                         <button class="pubg-btn btn-close" onclick="Close()">FECHAR (ESC)</button>
                     </div>
                 </div>
             </main>
         </div>
+
+        <div id="context-menu" style="display: none;">
+            <div class="context-menu-option" data-action="USE_ITEM">USAR</div>
+            <div class="context-menu-option" data-action="SEND_ITEM">ENVIAR</div>
+            <div class="context-menu-option" data-action="DROP_ITEM">DROPAR</div>
+        </div>
     </div>
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <script src="utils/App.js"></script>
     <script src="main.js"></script>
     <script src="modules/Weapons.js"></script>

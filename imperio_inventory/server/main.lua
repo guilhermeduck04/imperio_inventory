@@ -334,7 +334,7 @@ RegisterTunnel.useItem = function(slot, amount)
 
 			local item = inv[tostring(slot)].item
 			local itemType = Items[item].tipo
-            print("NKT", item, itemType)
+            -- print("NKT", item, itemType)
 			if itemType then
                 if amount == nil or amount <= 0 then
                     amount = vRP.getInventoryItemAmount(user_id, item)
@@ -675,8 +675,8 @@ RegisterTunnel.useItem = function(slot, amount)
                     end
                 end
 
-                if itemType == "equipar" then
-
+if itemType == "equipar" then
+                    -- ... (código de equipar continua igual) ...
                     local data = vRP.getUserDataTable(user_id)
                     local myWeapons = data.weapons
                     local blockWeapons = {}
@@ -710,29 +710,33 @@ RegisterTunnel.useItem = function(slot, amount)
                         return { error = "Você já possui uma arma dessa classe equipada!"}
                     end
                 end
-
             
-                if itemType == "recarregar" then
-
+if itemType == "recarregar" then
                     local weapon = string.gsub(item, "AMMO_", "WEAPON_")
-                    local municao = vRPclient.getAmmo(source, weapon)
-                    local maxMunicao = 250
-                    if vRPclient.checkWeapon(source, weapon) then
-                        if municao < 250 then
-                            if maxMunicao <= amount then
-                                maxMunicao = maxMunicao - municao
-                                amount = maxMunicao
-                            else
-                                maxMunicao = maxMunicao - municao
-                                if amount > maxMunicao then
-                                amount = maxMunicao
-                                end
+                    
+                    -- ALTERAÇÃO AQUI: Em vez de checkWeapon (na mão), pegamos todas as armas
+                    local currentWeapons = vRPclient.getWeapons(source) or {}
+                    
+                    if currentWeapons[weapon] then
+                        local municao = currentWeapons[weapon].ammo or 0
+                        local maxMunicao = 250 -- Limite de munição
+
+                        if municao < maxMunicao then
+                            -- Calcula quanto falta para encher
+                            local falta = maxMunicao - municao
+                            
+                            -- Se a quantidade enviada for maior que o necessário, usa só o necessário
+                            if amount > falta then
+                                amount = falta
                             end
 
                             if vRP.tryGetInventoryItem(user_id, item, amount, true, slot) then
                                 local weapons = {}
-                                weapons[weapon] = { ammo = amount }
+                                -- Adiciona a quantidade à munição existente
+                                weapons[weapon] = { ammo = amount } 
+                                -- false no terceiro parametro do _giveWeapons geralmente significa "não limpar as outras armas"
                                 vRPclient._giveWeapons(source, weapons, false)
+                                
                                 vRP.sendLog("EQUIPAR","O ID " ..user_id .." recarregou a municao " ..vRP.getItemName(item) .. " na quantidade de " .. amount .. " x.")
                                 return { success = "Munição equipada com sucesso", used_amount = amount}
                             end
@@ -740,7 +744,7 @@ RegisterTunnel.useItem = function(slot, amount)
                             return { error =  "Sua " .. vRP.getItemName(weapon) .. " já está com seu maximo de munição" }
                         end
                     else
-                        return { error = "Você precisa estar com a " ..vRP.getItemName(weapon) .. " na mão para recarregar." }
+                        return { error = "Você precisa possuir a " ..vRP.getItemName(weapon) .. " equipada para recarregar." }
                     end
                 end
                 return { error = "Item não utilizável." }
