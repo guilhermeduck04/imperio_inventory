@@ -58,8 +58,10 @@ class Inventory {
         return items
     }
 
+    // ATUALIZADO: Separa Hotbar do Resto
     renderSlots(target = "left"){
         if (target === "left") {
+            // Limpa ambos os containers
             $(".hotbar-slots").html('');
             $(".slots-left").html('');
             
@@ -68,15 +70,17 @@ class Inventory {
     
             for (let i = 0; i < 50; i++) {
                 let slot = i+1;
-                let htmlSnippet = '';
-
-                // Verifica se tem item configurado no slot
+                // Se o item existe e está configurado
                 if(!this.items[slot.toString()] || (this.items[slot.toString()] && globalThis.Config[this.items[slot.toString()].item])){
+                    let htmlSnippet = '';
                     
                     if (this.items[slot.toString()]) {
                         const item = this.items[slot.toString()];
+                        // Passamos o 4º parametro como o numero do slot para indicar a tecla na hotbar
                         htmlSnippet = this.getItemHtml(item, target, slot, "allDiv", slot <= 5 ? slot : null);
                     } else {
+                        // Slot vazio
+                        // Adiciona indicador de tecla se for hotbar
                         let keyIndicator = slot <= 5 ? `<div class="key-indicator">${slot}</div>` : '';
                         htmlSnippet = `<div class="slot empty slot-${target}${slot}" data-side="${target}" data-id="${slot}">${keyIndicator}</div>`;
                     }
@@ -93,9 +97,12 @@ class Inventory {
             $(".slots-left").html(mainHtml);
             
         } else {
+            // Renderização padrão para o lado direito (baú/chão)
             $(".slots-"+target).html('');
             let htmlContent = '';
             
+            // Geralmente baús têm tamanhos variados, mas vamos usar um loop padrão ou baseado no maxWeight se disponível
+            // Aqui mantemos o loop padrão de 50 para exemplo, mas idealmente seria dinâmico
             for (let i = 0; i < 50; i++) {
                 let slot = i+1;
                 if(!this.items[slot.toString()] || (this.items[slot.toString()] && globalThis.Config[this.items[slot.toString()].item])){
@@ -133,28 +140,25 @@ class Inventory {
 
     getItemHtml(item, target, slot, method = "allDiv", hotbarKey = null){
         const imgUrl = `http://127.0.0.1/conexao_imagens/${item.item}.png`;
-        const totalWeight = ((item.weight || 0) * item.amount).toFixed(2);
-        const amountText = (item.amount) ? `x${item.amount}` : "R$"+item.price;
-
+        
         if(method == "onlyItems"){
             return `
-                <div class="item-top-info">
-                    <span class="item-weight">${totalWeight}kg</span>
-                    <span class="item-amount">${amountText}</span>
+                <div class="amount-circle">
+                    <p>${((item.amount) ? `x${item.amount}` : "R$"+item.price)}</p>
                 </div>
                 <img src="${imgUrl}" onerror="this.src='../assets/images/no_image.png'"/>
                 <p>${item.name}</p>
             `
         }
 
+        // Adiciona indicador visual da tecla se for passado
         let keyIndicatorHtml = hotbarKey ? `<div class="key-indicator">${hotbarKey}</div>` : '';
 
         return `
         <div class="slot slot-${target} slot-item slot-${target}${slot}" data-side="${target}" data-id="${slot}">
             ${keyIndicatorHtml}
-            <div class="item-top-info">
-                <span class="item-weight">${totalWeight}kg</span>
-                <span class="item-amount">${amountText}</span>
+            <div class="amount-circle">
+                <p>${((item.amount) ? `x${item.amount}` : "R$"+item.price)}</p>
             </div>
             <img src="${imgUrl}" onerror="this.src='../assets/images/no_image.png'"/>
             <p>${item.name}</p>      
@@ -194,6 +198,7 @@ class Inventory {
         $('.name-frame').html(globalThis.SelectedItem.name);
         $('.weight-frame').html(`${(globalThis.SelectedItem.weight || 0).toFixed(2)} kg`);
         $('.circle-quantity').html((globalThis.SelectedItem.amount) ? "x"+globalThis.SelectedItem.amount : "R$"+globalThis.SelectedItem.price);
+        
         $('.inspector-image img').attr('src', `http://127.0.0.1/conexao_imagens/${globalThis.SelectedItem.item}.png`);
         
         $(`.slot-${side}${item.id}`).addClass('slot-active');
@@ -212,15 +217,20 @@ class Inventory {
             if(inputValue > old.item.amount){ inputValue = old.item.amount}
             if(old.side == "right" && window.classInstances[old.side]?.mode) return false
             const response = old.side == "right" || await Client("SWAP_SLOT", { from_slot: old.id, from_amount: inputValue, to_slot: next.id });
-            
-            if(!response || response.error){
+            if(!response){
                 return false
             }
-
-            // ATUALIZAÇÃO LOCAL DOS DADOS
             if(!next.item){
-                // Move para slot vazio
                 if(old.item.amount <= inputValue){
+                    // Atualiza a UI localmente para resposta instantânea
+                    // A lógica aqui é complexa de separar por container via JS puro sem recarregar tudo,
+                    // mas o renderSlots recarregará tudo corretamente na próxima atualização.
+                    // Para feedback imediato no drag, manipulamos os dados this.items e o HTML.
+                    
+                    // Como dividimos em containers diferentes, mover do slot 10 (main) para o 1 (hotbar)
+                    // requer mover o HTML entre divs diferentes. O método mais seguro e limpo é:
+                    // Atualizar os dados e chamar renderSlots(side).
+                    
                     this.items[(next.id).toString()] = this.items[(old.id).toString()]
                     this.items[(next.id).toString()].amount = inputValue
                     
@@ -229,10 +239,14 @@ class Inventory {
                     } else {
                         this.items[(old.id).toString()].amount -= inputValue
                     }
+                    
+                    this.renderSlots(old.side); // Re-renderiza tudo para colocar no lugar certo
+                    
                 }else{
                     this.items[(old.id).toString()].amount -= inputValue
                     this.items[(next.id).toString()] = {}
                     Object.assign(this.items[(next.id).toString()],this.items[(old.id).toString()], {amount: inputValue}) 
+                    this.renderSlots(old.side);
                 }
             }else if(old.item.item == next.item.item){
                 // Stack
@@ -243,6 +257,7 @@ class Inventory {
                      this.items[(old.id).toString()].amount -= inputValue
                      this.items[(next.id).toString()].amount += inputValue
                 }
+                this.renderSlots(old.side);
             }else if(old.item.item !== next.item.item){
                 // Swap
                 let oldObj = JSON.parse(JSON.stringify(this.items[(old.id).toString()]))
@@ -251,16 +266,10 @@ class Inventory {
                 oldObj.slot     = old.id
                 this.items[(next.id).toString()] = oldObj
                 this.items[(old.id).toString()] = nextObj
-            }
-
-            // CORREÇÃO CRÍTICA: Use setTimeout para re-renderizar
-            // Isso evita conflitos com o ciclo de vida do Drag & Drop do jQuery UI
-            setTimeout(() => {
                 this.renderSlots(old.side);
-            }, 10);
+            }
+            // this.updateDrag(old.side) // renderSlots já chama updateDrag
         }
-
-        // Lógica entre inventários (Mochila <-> Baú)
         if(old.side == "left" && next.side == "right"){
             old.item = this.items[(old.id).toString()]
             let inputValue = parseInt($('.input-frame').val()) > 0 ? parseInt($('.input-frame').val()) : old.item.amount
@@ -295,21 +304,22 @@ class Inventory {
                 await window.classInstances["right"].takeItem(old.id, inputValue, next.id)
             }
         }
+
     }
 
     updateDrag(target) {
         $(`.slot-${target}`).draggable({
             disabled: false,
             appendTo: 'body',
-            zIndex: 99999,
+            zIndex: 9999,
             revertDuration: 0,
-            // refreshPositions: false é bom para performance, mas removi para testar precisão se necessário
+            refreshPositions: false,
             start: (event, ui) => {
                 this.selectItem(event.currentTarget.dataset.side, event.currentTarget.dataset.id)
                 $(ui.helper).css({
                     width: $(event.target).width(),
                     height: $(event.target).height(),
-                    backgroundColor: 'rgba(30,30,30,0.85)',
+                    backgroundColor: 'rgba(30,30,30,0.8)',
                     border: '1px solid #f0ad4e',
                     zIndex: 99999
                 });
@@ -322,7 +332,6 @@ class Inventory {
         $(`.slot`).droppable({
             accept: ".slot-item, .slot-weapon",
             hoverClass: "slot-active",
-            tolerance: "pointer", // CORREÇÃO: Melhora muito a precisão do drop
             drop: async (event, ui) => {
                 if (ui.draggable.hasClass("slot-weapon")) {
                     const weaponName = ui.draggable.data("weapon");
@@ -345,11 +354,9 @@ class Inventory {
             },
         });
 
-        // Área de armas aceita drops
         $(".left-content").droppable({
             accept: ".slot-left",
             hoverClass: "hover-highlight", 
-            tolerance: "pointer",
             drop: async (event, ui) =>{
                 const self = window.classInstances[ui.draggable.data('side')]
                 if(!self || ui.draggable.data('side') !== "left") return 
@@ -392,11 +399,9 @@ class Inventory {
             }
         });
 
-        // Drop específico na arma
         $(".slot-weapon").droppable({
             accept: ".slot-item",
             greedy: true, 
-            tolerance: "pointer",
             drop: async (event, ui) => {
                 const id = ui.draggable.data('id');
                 const self = window.classInstances["left"];
@@ -419,17 +424,18 @@ class Inventory {
             }
         });
 
-        // Clique direito
         $(`.slot-${target}`).off('contextmenu').on('contextmenu', async function(event) {
             event.preventDefault(); 
             const id = $(this).data('id');
             const side = $(this).data('side');
+            
             if (side !== 'left') return; 
 
             const self = window.classInstances[side];
             if (!self.items[id]) return;
 
             const item = self.items[id].key || self.items[id].item;
+            
             let inputValue = 1;
             const configItem = globalThis.Config[item];
             
@@ -438,6 +444,7 @@ class Inventory {
             }
 
             const response = await Client("USE_ITEM", {slot: id, item: item, amount: inputValue});
+            
             if(response && !response.error){
                 self.removeItem(id, response?.used_amount || inputValue);
                 if((configItem?.tipo == "equipar" || configItem?.tipo == "recarregar")){
@@ -454,7 +461,6 @@ class Inventory {
 
         $(`.action-button`).droppable({
             accept: ".slot-left",
-            tolerance: "pointer",
             drop: async (event, ui) => {
                 const self = window.classInstances[ui.draggable.data('side')]
                 if(!self || ui.draggable.data('side') !== "left") return 

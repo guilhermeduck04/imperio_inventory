@@ -11,10 +11,25 @@ function API.useBandagem()
 	oldHealth = GetEntityHealth(PlayerPedId())
 end
 
+-- NOVO: Função para cancelar o uso
+function API.cancelItem()
+    if bandagem then
+        bandagem = false
+        tempoBandagem = 0
+        TriggerEvent("Notify", "aviso", "Ação cancelada!", 3000)
+    end
+end
+
+-- NOVO: Verifica se está usando algo (para o main.lua saber)
+function API.isUsingItem()
+    return bandagem
+end
+
 CreateThread(function()
 	while true do
 		local time = 1000
 		if bandagem then
+            time = 1000 -- Intervalo de 1s para o contador
 			if GetEntityHealth(PlayerPedId()) > 300 then
 				tempoBandagem = 0
 				bandagem = false

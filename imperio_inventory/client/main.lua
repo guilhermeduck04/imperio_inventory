@@ -25,6 +25,20 @@ RegisterNetEvent("imperio_survival:updateArena", function(boolean)
     in_arena = boolean
 end)
 
+-- NOVO: Thread para cancelar ação com X (Tecla 73)
+CreateThread(function()
+    while true do
+        local time = 100
+        if API.isUsingItem and API.isUsingItem() then
+            time = 5
+            if IsControlJustPressed(0, 73) then -- Tecla X
+                API.cancelItem()
+            end
+        end
+        Wait(time)
+    end
+end)
+
 RegisterCommand("abrirmochilanikito",function()
     local ped = PlayerPedId()
     
@@ -47,7 +61,13 @@ RegisterCommand("abrirmochilanikito",function()
     return
     end
     
-    SendNUIMessage({route = "OPEN_INVENTORY",})
+    -- Busca itens num raio de 3 metros
+    local drops = API.getNearbyDrops(3.0)
+
+    SendNUIMessage({
+        route = "OPEN_INVENTORY",
+        drops = drops -- Envia a lista para o HTML
+    })
     SetNuiFocus(true,true)
 end)
 
@@ -55,10 +75,8 @@ CreateThread(function()
     RegisterKeyMapping("abrirmochilanikito","Abrir a mochila","keyboard","OEM_3")
     RegisterKeyMapping("openchest","Trunkchest Open","keyboard","PAGEUP")
 
-    -- Atalhos do inventário (Versão Corrigida)
     for i = 1, 5 do
         RegisterCommand("+inventory:hotkey" .. i, function()
-            -- Apenas informa ao servidor que a tecla foi pressionada
             TriggerServerEvent("imperio_inventory:useItemFromHotkey", tostring(i))
         end, false)
         RegisterCommand("-inventory:hotkey" .. i, function() end, false)
@@ -66,16 +84,12 @@ CreateThread(function()
     end
 end)
 
--- Este evento é chamado pelo servidor para forçar a atualização da UI
 RegisterNetEvent("inventory:update")
 AddEventHandler("inventory:update", function()
     if IsNuiFocused() then
         SendNUIMessage({route = "FORCE_UPDATE_INVENTORY"})
     end
 end)
-
-
-
 
 function API.getActivePlayers()
     local response = {}
@@ -89,7 +103,6 @@ end
 function API.inVehicle()
     return IsPedInAnyVehicle(PlayerPedId())
 end
-
 
 AddEventHandler(GetCurrentResourceName()..":emitNuiEvent",function(ev)
     if IsNuiFocused() and not IsNuiFocusKeepingInput() then 
@@ -116,8 +129,6 @@ function DrawText3D(x,y,z, text)
     DrawRect(_x,_y+0.0125, 0.015+ factor, 0.03, 41, 11, 41, 68)
 end
 
-
-
 function API.rechargeCheck(ammoType)
 	local ped = PlayerPedId()
 	if weapon_ammos[ammoType] then
@@ -130,9 +141,6 @@ function API.rechargeCheck(ammoType)
 	return false
 end
 
------------------------------------------------------------------------------------------------------------------------------------------
--- SAFEZONE
------------------------------------------------------------------------------------------------------------------------------------------
 exports("setinsafe", function(status)
 	insafezone = status
 end)

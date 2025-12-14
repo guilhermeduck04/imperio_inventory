@@ -13,6 +13,28 @@ function API.removeDrop(id)
 	end
 end
 
+-- NOVO: Retorna lista de itens próximos para a UI
+function API.getNearbyDrops(radius)
+    local ped = PlayerPedId()
+    local coords = GetEntityCoords(ped)
+    local nearDrops = {}
+    
+    for k,v in pairs(droplist) do
+        local dist = #(coords - vector3(v.x, v.y, v.z))
+        if dist <= radius then
+            -- Prepara o objeto para a UI
+            table.insert(nearDrops, {
+                id = k, -- ID único do drop
+                item = v.item,
+                amount = v.count,
+                name = v.name,
+                weight = v.peso
+            })
+        end
+    end
+    return nearDrops
+end
+
 CreateThread(function()
     while true do
         local time = 1000
@@ -40,3 +62,23 @@ CreateThread(function()
     end
 end)
 
+function API.getNearbyDrops(radius)
+    local ped = PlayerPedId()
+    local coords = GetEntityCoords(ped)
+    local nearDrops = {}
+    
+    for k,v in pairs(droplist) do
+        local dist = #(coords - vector3(v.x, v.y, v.z))
+        if dist <= radius then
+            table.insert(nearDrops, {
+                id = k,
+                item = v.item,
+                amount = v.count,
+                name = v.name,
+                weight = v.peso,
+                index = v.index
+            })
+        end
+    end
+    return nearDrops
+end
