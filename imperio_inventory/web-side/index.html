@@ -38,10 +38,6 @@
                         </div>
                     </div>
                 
-                    <!-- <div class="location-info">
-                        <span style="display:block; margin-bottom:-5px;">LOCALIZAÇÃO</span>
-                        <h1 class="inventory-right-type">ARREDORES</h1>
-                    </div> -->
                     
                     <div class="weight-bar-container right-weight-container" style="display:none; margin-left: auto;">
                         <div class="weight-text weight-right"></div>
@@ -56,7 +52,7 @@
                     <div class="left-content"></div>
                     <div class="action-buttons-grid">
                         <button class="pubg-btn button-left-red">DESEQUIPAR</button>
-                        <button class="pubg-btn button-left-black">TODAS</button>
+                        <button class="pubg-btn button-left-black" onclick="OpenAttachs()">MODIFICAR</button>
                     </div>
                 </div>
 
@@ -99,6 +95,26 @@
                     </div>
                 </div>
             </main>
+
+            <div id="attachs-container" style="display: none; width: 100%; height: 100%; position: relative;">
+                
+                <div class="weapon-viewport">
+                    <div class="viewport-header">
+                        <h1>CUSTOMIZAÇÃO DE ARMA</h1>
+                        <span id="attach-weapon-name">M4A1</span>
+                    </div>
+                    <div class="rotate-area"></div>
+                    
+                    <button class="pubg-btn btn-back-inv" onclick="CloseAttachs()">VOLTAR AO INVENTÁRIO</button>
+                </div>
+
+                <div class="attach-inventory-column">
+                    <div class="column-header">SEUS ITENS</div>
+                    <div class="container-slots slots-attach-source">
+                        </div>
+                </div>
+            </div>
+
         </div>
         <div id="context-menu" style="display: none;"></div>
     </div>

@@ -64,6 +64,14 @@ Routes = {
         return Remote.pegarItem(data.id)
     end,
 
+    ["ENTER_ATTACH_MODE"] = function(data)
+        API.enterAttachMode(data.weapon)
+    end,
+    
+    ["EXIT_ATTACH_MODE"] = function(data)
+        API.exitAttachMode()
+    end,
+
     ["TAKE_INSPECT_ITEM"] = function(data)
         return Remote.takeInspectItem(ts(data.from_slot), ts(data.to_slot), tn(data.amount))
     end,

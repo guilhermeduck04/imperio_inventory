@@ -26,16 +26,10 @@ RegisterNetEvent("imperio_survival:updateArena", function(boolean)
     in_arena = boolean
 end)
 
--- BLOQUEIO DE TECLAS NUMÉRICAS (1-5) PARA ARMAS
+-- THREAD DE CANCELAMENTO (Travas numéricas REMOVIDAS para liberar o TAB)
 CreateThread(function()
     while true do
         local time = 100
-        -- Bloqueia troca de arma nativa (1, 2, 3, 4, 5)
-        DisableControlAction(0, 157, true) 
-        DisableControlAction(0, 158, true) 
-        DisableControlAction(0, 160, true) 
-        DisableControlAction(0, 164, true) 
-        DisableControlAction(0, 165, true) 
         
         -- Verifica se deve cancelar ação com X (Tecla 73)
         if API.isUsingItem and API.isUsingItem() then
